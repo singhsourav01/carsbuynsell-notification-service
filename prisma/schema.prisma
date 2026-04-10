@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum NotificationType {
+  NEW_LISTING
+  BID_OUTBID
+  SUBSCRIPTION_SUCCESS
+  VEHICLE_SUBMITTED
+  AUCTION_CLOSING_SOON
+  GENERAL
+}
+
+enum NotificationChannel {
+  PUSH
+  IN_APP
+  BOTH
+}
+
+model notifications {
+  ntf_id           String              @id @default(uuid()) @map("_id")
+  ntf_user_id      String
+  ntf_type         NotificationType
+  ntf_title        String
+  ntf_body         String              @db.Text
+  ntf_data         Json?
+  ntf_channel      NotificationChannel @default(BOTH)
+  ntf_is_read      Boolean             @default(false)
+  ntf_read_at      DateTime?
+  ntf_push_sent    Boolean             @default(false)
+  ntf_push_sent_at DateTime?
+  ntf_created_at   DateTime            @default(now())
+  ntf_updated_at   DateTime            @updatedAt
+
+  @@index([ntf_user_id, ntf_is_read])
+  @@index([ntf_user_id, ntf_created_at])
+  @@index([ntf_type])
+}
+
+model broadcast_logs {
+  bl_id           String           @id @default(uuid()) @map("_id")
+  bl_type         NotificationType
+  bl_title        String
+  bl_body         String           @db.Text
+  bl_data         Json?
+  bl_total_sent   Int              @default(0)
+  bl_total_failed Int              @default(0)
+  bl_triggered_by String
+  bl_created_at   DateTime         @default(now())
+  bl_updated_at   DateTime         @updatedAt
+}
