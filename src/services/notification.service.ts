@@ -337,7 +337,7 @@ class NotificationService {
     return { unread_count: count };
   };
 
-  markAsRead = async (ntf_id: string, user_id: string) => {
+  markAsRead = async (ntf_id: any, user_id: string) => {
     const notification = await this.notificationRepository.findById(ntf_id);
     if (!notification) {
       throw new Error("NOTIFICATION_NOT_FOUND");
