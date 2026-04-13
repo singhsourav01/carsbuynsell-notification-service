@@ -9,7 +9,7 @@ const USER_SERVICE_URL = process.env.USER_SERVICE_URL || "http://localhost:3002/
 export const getUserFCMTokens = async (user_id: string): Promise<string[]> => {
   try {
     const { data } = await axios.get(
-      `${USER_SERVICE_URL}/internal/user/${user_id}/fcm-tokens`
+      `${USER_SERVICE_URL}/user/${user_id}/fcm-tokens`
     );
     return data.data || [];
   } catch (error) {
@@ -24,7 +24,7 @@ export const getUserFCMTokens = async (user_id: string): Promise<string[]> => {
 export const getAllUserFCMTokens = async (): Promise<UserFCMTokens[]> => {
   try {
     const { data } = await axios.get(
-      `${USER_SERVICE_URL}/internal/users/fcm-tokens`
+      `${USER_SERVICE_URL}/users/fcm-tokens`
     );
     return data.data || [];
   } catch (error) {
@@ -42,7 +42,7 @@ export const getEngagedUserFCMTokens = async (
 ): Promise<UserFCMTokens[]> => {
   try {
     const { data } = await axios.get(
-      `${USER_SERVICE_URL}/internal/listing/${listing_id}/engaged-users`,
+      `${USER_SERVICE_URL}/listing/${listing_id}/engaged-users`,
       {
         params: { exclude: exclude_user_id },
       }
