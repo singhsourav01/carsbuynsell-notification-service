@@ -41,10 +41,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(API_ENDPOINTS.BASE, NotificationRoutes);
 
 // ─── Admin Routes ─────────────────────────────────────────────────────────────
-app.use(API_ENDPOINTS.BASE + API_ENDPOINTS.ADMIN, AdminNotificationRoutes);
+app.use(API_ENDPOINTS.BASE, AdminNotificationRoutes);
 
 // ─── Internal Routes (inter-service, no auth) ────────────────────────────────
-app.use(API_ENDPOINTS.BASE + API_ENDPOINTS.INTERNAL, InternalRoutes);
+app.use(API_ENDPOINTS.BASE, InternalRoutes);
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────
 app.use((err: ApiError, req: Request, res: Response, next: NextFunction) => {
