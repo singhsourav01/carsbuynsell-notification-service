@@ -1,7 +1,7 @@
 import axios from "axios";
 import { UserFCMTokens } from "../types/notification.types";
 
-const USER_SERVICE_URL = process.env.USER_SERVICE_URL || "http://localhost:3002/user";
+const USER_SERVICE_URL = process.env.USER_SERVICE_URL || "http://13.127.188.130:3004/user";
 
 /**
  * Get FCM tokens for a single user (all their devices)
