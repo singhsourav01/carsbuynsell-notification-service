@@ -17,6 +17,7 @@ const notificationService = new NotificationService();
 InternalRoutes.route(API_ENDPOINTS.INTERNAL_NEW_LISTING).post(
   asyncHandler(async (req: Request, res: Response) => {
     const { listing_id, listing_title, listing_type } = req.body;
+    console.log(listing_id, listing_title, listing_type)
 
     if (!listing_id || !listing_title || !listing_type) {
       return res

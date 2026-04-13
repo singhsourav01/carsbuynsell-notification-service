@@ -35,7 +35,7 @@ class NotificationService {
    */
   handleNewListing = async (payload: NewListingPayload) => {
     const { listing_id, listing_title, listing_type } = payload;
-
+    console.log('inside service');
     const { title, body } = this.templateService.getRenderedTemplate("NEW_LISTING", {
       listing_title,
       listing_type,
@@ -45,9 +45,11 @@ class NotificationService {
       listing_id,
       type: "NEW_LISTING",
     };
+    console.log(dataPayload, "check if data payload is correct");
 
     // Fetch all user FCM tokens
     const allUsers: UserFCMTokens[] = await getAllUserFCMTokens();
+    console.log(allUsers, "check if notificatin is able to get all users");
     if (allUsers.length === 0) {
       console.log("No users found for new-listing broadcast");
       return { success: 0, failure: 0 };
