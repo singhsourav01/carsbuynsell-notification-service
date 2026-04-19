@@ -1,7 +1,7 @@
 export const NOTIFICATION_TEMPLATES = {
   NEW_LISTING: {
     title: "🚗 New Listing Alert!",
-    body: "A new {{listing_type}} listing '{{listing_title}}' has been added! Hurry up & grab your chance to place a bid.",
+    body: "A new listing '{{listing_title}}' has been added! Hurry up & grab your chance to place a bid.",
   },
   AUCTION_CLOSING_SOON: {
     title: "⏰ Auction Closing Soon!",
