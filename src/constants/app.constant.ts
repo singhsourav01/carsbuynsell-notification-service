@@ -8,43 +8,22 @@ export const ROLES = {
 
 export const API_ENDPOINTS = {
   BASE: "/notification",
-  INTERNAL: "/internal",
 
-  // Internal routes (no auth)
+  // Internal routes (no auth — called by user-service)
   INTERNAL_NEW_LISTING: "/new-listing",
-  INTERNAL_BID_OUTBID: "/bid-outbid",
-  INTERNAL_SUBSCRIPTION_SUCCESS: "/subscription-success",
-  INTERNAL_VEHICLE_SUBMITTED: "/vehicle-submitted",
 
   // Admin routes
-  ADMIN: "/admin",
   ADMIN_AUCTION_CLOSING_SOON: "/auction-closing-soon",
-  ADMIN_BROADCAST: "/broadcast",
-  ADMIN_BROADCAST_LOGS: "/broadcast-logs",
-
-  // User routes
-  MY_NOTIFICATIONS: "/my",
-  MY_UNREAD_COUNT: "/my/unread-count",
-  MARK_READ: "/my/:ntf_id/read",
-  MARK_ALL_READ: "/my/read-all",
 };
 
 export const API_RESPONSES = {
   NOTIFICATION_SENT: "Notification sent successfully",
-  NOTIFICATIONS_FETCHED: "Notifications fetched successfully",
-  NOTIFICATION_MARKED_READ: "Notification marked as read",
-  ALL_NOTIFICATIONS_MARKED_READ: "All notifications marked as read",
-  UNREAD_COUNT_FETCHED: "Unread count fetched successfully",
-  BROADCAST_SENT: "Broadcast notification sent successfully",
-  BROADCAST_LOGS_FETCHED: "Broadcast logs fetched successfully",
   AUCTION_CLOSING_NOTIFICATION_SENT: "Auction closing soon notification sent",
 };
 
 export const API_ERRORS = {
   DATABASE_ERROR: "Database error!",
   YOU_DO_NOT_HAVE_PERMISSION: "You don't have permissions for this action",
-  NOTIFICATION_NOT_FOUND: "Notification not found",
-  NOTIFICATION_NOT_YOURS: "This notification does not belong to you",
   SEND_PROPER_JSON: "Please send proper json data",
   MISSING_REQUIRED_FIELDS: "Missing required fields",
   FAILED_TO_FETCH_FCM_TOKENS: "Failed to fetch FCM tokens from user-service",

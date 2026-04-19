@@ -12,16 +12,4 @@ AdminNotificationRoutes.route(API_ENDPOINTS.ADMIN_AUCTION_CLOSING_SOON).post(
   adminController.auctionClosingSoon
 );
 
-// POST /notification/admin/broadcast
-AdminNotificationRoutes.route(API_ENDPOINTS.ADMIN_BROADCAST).post(
-  authAdmin(),
-  adminController.broadcast
-);
-
-// GET /notification/admin/broadcast-logs?page=1&page_size=10
-AdminNotificationRoutes.route(API_ENDPOINTS.ADMIN_BROADCAST_LOGS).get(
-  authAdmin(),
-  adminController.getBroadcastLogs
-);
-
 export default AdminNotificationRoutes;

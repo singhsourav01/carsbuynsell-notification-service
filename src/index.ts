@@ -6,17 +6,13 @@ import { StatusCodes } from "http-status-codes";
 import {
   API_ENDPOINTS,
   API_ERRORS,
-  EUREKA,
   PORT,
   STRINGS,
 } from "./constants/app.constant";
 
 // Routes
-import NotificationRoutes from "./routes/notification.routes";
 import AdminNotificationRoutes from "./routes/admin.notification.routes";
 import InternalRoutes from "./routes/internal.routes";
-
-import { registerWithEureka } from "./utils/eureka.helper";
 
 config();
 
@@ -37,13 +33,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ─── User-Facing Routes ──────────────────────────────────────────────────────
-app.use(API_ENDPOINTS.BASE, NotificationRoutes);
-
-// ─── Admin Routes ─────────────────────────────────────────────────────────────
+// ─── Admin Routes (auction-closing-soon, requires admin auth) ─────────────────
 app.use(API_ENDPOINTS.BASE, AdminNotificationRoutes);
 
-// ─── Internal Routes (inter-service, no auth) ────────────────────────────────
+// ─── Internal Routes (new-listing, no auth — called by user-service) ──────────
 app.use(API_ENDPOINTS.BASE, InternalRoutes);
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────

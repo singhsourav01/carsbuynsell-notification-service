@@ -9,11 +9,7 @@ datasource db {
 
 enum NotificationType {
   NEW_LISTING
-  BID_OUTBID
-  SUBSCRIPTION_SUCCESS
-  VEHICLE_SUBMITTED
   AUCTION_CLOSING_SOON
-  GENERAL
 }
 
 enum NotificationChannel {

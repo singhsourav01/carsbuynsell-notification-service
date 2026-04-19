@@ -45,79 +45,6 @@ class NotificationRepository {
   };
 
   /**
-   * Get paginated notifications for a user (newest first)
-   */
-  findByUserId = async (user_id: string, page: number, take: number) => {
-    const skip = (page - 1) * take;
-    const [notifications, count] = await queryHandler(() =>
-      prisma.$transaction([
-        prisma.notifications.findMany({
-          where: { ntf_user_id: user_id },
-          take,
-          skip,
-          orderBy: { ntf_created_at: "desc" },
-        }),
-        prisma.notifications.count({
-          where: { ntf_user_id: user_id },
-        }),
-      ])
-    );
-    return { notifications, count, page, take };
-  };
-
-  /**
-   * Get unread count for a user
-   */
-  getUnreadCount = async (user_id: string) => {
-    return queryHandler(() =>
-      prisma.notifications.count({
-        where: { ntf_user_id: user_id, ntf_is_read: false },
-      })
-    );
-  };
-
-  /**
-   * Find a notification by ID
-   */
-  findById = async (ntf_id: string) => {
-    return queryHandler(() =>
-      prisma.notifications.findUnique({
-        where: { ntf_id },
-      })
-    );
-  };
-
-  /**
-   * Mark a single notification as read
-   */
-  markAsRead = async (ntf_id: string) => {
-    return queryHandler(() =>
-      prisma.notifications.update({
-        where: { ntf_id },
-        data: {
-          ntf_is_read: true,
-          ntf_read_at: new Date(),
-        },
-      })
-    );
-  };
-
-  /**
-   * Mark all notifications as read for a user
-   */
-  markAllAsRead = async (user_id: string) => {
-    return queryHandler(() =>
-      prisma.notifications.updateMany({
-        where: { ntf_user_id: user_id, ntf_is_read: false },
-        data: {
-          ntf_is_read: true,
-          ntf_read_at: new Date(),
-        },
-      })
-    );
-  };
-
-  /**
    * Create a broadcast log entry
    */
   createBroadcastLog = async (data: {
@@ -142,24 +69,6 @@ class NotificationRepository {
         },
       })
     );
-  };
-
-  /**
-   * Get paginated broadcast logs
-   */
-  getBroadcastLogs = async (page: number, take: number) => {
-    const skip = (page - 1) * take;
-    const [logs, count] = await queryHandler(() =>
-      prisma.$transaction([
-        prisma.broadcast_logs.findMany({
-          take,
-          skip,
-          orderBy: { bl_created_at: "desc" },
-        }),
-        prisma.broadcast_logs.count(),
-      ])
-    );
-    return { logs, count, page, take };
   };
 }
 

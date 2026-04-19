@@ -6,6 +6,13 @@ class FCMService {
   }
 
   /**
+   * Send a raw Firebase message via admin.messaging().send()
+   */
+  sendMessage = async (message: admin.messaging.Message): Promise<string> => {
+    return await admin.messaging().send(message);
+  };
+
+  /**
    * Send push to a single device
    */
   sendToDevice = async (
@@ -14,22 +21,24 @@ class FCMService {
     body: string,
     data?: Record<string, string>
   ): Promise<boolean> => {
+    const message: admin.messaging.Message = {
+      token: fcmToken,
+      notification: { title, body },
+      data: data || {},
+      android: {
+        priority: "high",
+        notification: {
+          channelId: "carsbuynsell_notifications",
+          sound: "default",
+        },
+      },
+      apns: {
+        payload: { aps: { sound: "default", badge: 1 } },
+      },
+    };
+
     try {
-      await admin.messaging().send({
-        token: fcmToken,
-        notification: { title, body },
-        data: data || {},
-        android: {
-          priority: "high",
-          notification: {
-            channelId: "carsbuynsell_notifications",
-            sound: "default",
-          },
-        },
-        apns: {
-          payload: { aps: { sound: "default", badge: 1 } },
-        },
-      });
+      await this.sendMessage(message);
       return true;
     } catch (error: any) {
       if (
