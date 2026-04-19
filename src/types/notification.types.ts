@@ -23,7 +23,7 @@ export interface CreateNotificationDTO {
   ntf_data?: any;
   ntf_channel?: NotificationChannel;
   ntf_push_sent?: boolean;
-  ntf_push_sent_at?: Date;
+  ntf_push_sent_at?: any;
 }
 
 // ─── User-Service API Response Types ──────────────────────────────────────────

@@ -48,22 +48,41 @@ class NotificationService {
     const notificationRecords: CreateNotificationDTO[] = [];
 
     for (const user of allUsers) {
-      allTokens.push(...user.tokens);
+      const validTokens = user.tokens.filter(
+        token => token && token !== "not-available"
+      );
+      console.log(`Sending push to ${allTokens.length} tokens`);
+      allTokens.push(...validTokens);
+
       notificationRecords.push({
         ntf_user_id: user.user_id,
         ntf_type: NotificationType.NEW_LISTING,
         ntf_title: title,
         ntf_body: body,
         ntf_data: { listing_id, listing_title },
-        ntf_push_sent: true,
-        ntf_push_sent_at: new Date(),
+        ntf_push_sent: false,
+        ntf_push_sent_at: null,
       });
     }
 
     // Send push notification to all devices
-    const pushResult = await this.fcmService.sendToMultipleDevices(
-      allTokens, title, body, dataPayload
-    );
+  const pushResult = await this.fcmService.sendToMultipleDevices(
+    allTokens,
+    title,
+    body,
+    dataPayload
+  );
+  const pushSent = pushResult.success > 0;
+
+    notificationRecords.forEach(record => {
+      record.ntf_push_sent = pushSent;
+      record.ntf_push_sent_at = pushSent ? new Date() : null;
+    });
+
+  if (pushResult.staleTokens.length > 0) {
+    console.log("Remove stale tokens:", pushResult.staleTokens);
+    // call user-service cleanup API here
+  }
 
     // Store in-app notifications
     if (notificationRecords.length > 0) {
@@ -108,22 +127,40 @@ class NotificationService {
     const notificationRecords: CreateNotificationDTO[] = [];
 
     for (const user of allUsers) {
-      allTokens.push(...user.tokens);
+          const validTokens = user.tokens.filter(
+        token => token && token !== "not-available"
+      );
+
+      allTokens.push(...validTokens);
       notificationRecords.push({
         ntf_user_id: user.user_id,
         ntf_type: NotificationType.AUCTION_CLOSING_SOON,
         ntf_title: title,
         ntf_body: body,
         ntf_data: { listing_id, listing_title },
-        ntf_push_sent: true,
-        ntf_push_sent_at: new Date(),
+        ntf_push_sent: false,
+        ntf_push_sent_at: null,
       });
     }
 
+    
     // Send push notification to all devices
     const pushResult = await this.fcmService.sendToMultipleDevices(
-      allTokens, title, body, dataPayload
+      allTokens,
+      title,
+      body,
+      dataPayload
     );
+    const pushSent = pushResult.success > 0;
+      notificationRecords.forEach(n => {
+        n.ntf_push_sent = pushSent;
+        n.ntf_push_sent_at = pushSent ? new Date() : null;
+      });
+
+    if (pushResult.staleTokens.length > 0) {
+      console.log("Remove stale tokens:", pushResult.staleTokens);
+      // call user-service cleanup API here
+    }
 
     // Store in-app notifications
     if (notificationRecords.length > 0) {
