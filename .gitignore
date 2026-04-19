@@ -1,4 +1,4 @@
 node_modules
+src/utils/fireBaseAdminSDK.json
 build
 .env
-src/utils/fireBaseAdminSDK.json

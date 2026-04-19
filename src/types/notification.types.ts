@@ -5,7 +5,7 @@ import { NotificationChannel, NotificationType } from "@prisma/client";
 export interface NewListingPayload {
   listing_id: string;
   listing_title: string;
-  listing_type: string;
+  listing_type: any;
 }
 
 export interface AuctionClosingSoonPayload {

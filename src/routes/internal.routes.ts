@@ -26,7 +26,7 @@ InternalRoutes.route(API_ENDPOINTS.INTERNAL_NEW_LISTING).post(
     const result = await notificationService.handleNewListing({
       listing_id,
       listing_title,
-      "NEW_LISTING",
+      listing_type:"NEW_LISTING",
     });
 
     return res

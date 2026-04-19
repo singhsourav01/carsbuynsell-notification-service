@@ -54,7 +54,7 @@ class NotificationService {
         ntf_type: NotificationType.NEW_LISTING,
         ntf_title: title,
         ntf_body: body,
-        ntf_data: { listing_id, listing_title, listing_type },
+        ntf_data: { listing_id, listing_title },
         ntf_push_sent: true,
         ntf_push_sent_at: new Date(),
       });
@@ -75,7 +75,7 @@ class NotificationService {
       bl_type: NotificationType.NEW_LISTING,
       bl_title: title,
       bl_body: body,
-      bl_data: { listing_id, listing_title, listing_type },
+      bl_data: { listing_id, listing_title },
       bl_total_sent: pushResult.success,
       bl_total_failed: pushResult.failure,
       bl_triggered_by: "SYSTEM",
