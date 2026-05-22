@@ -46,5 +46,5 @@ export const EUREKA = {
 };
 
 export const AUTH_SERVICE =
-  process.env.AUTH_SERVICE_URL || "http://65.2.10.30:3001/auth/.well-known/jwks.json";
+  process.env.AUTH_SERVICE_URL || "https://admin.carsbuynsell.com/api/auth/.well-known/jwks.json";
   
