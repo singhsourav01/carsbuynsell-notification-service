@@ -45,6 +45,5 @@ export const EUREKA = {
   DATA_CENTER_NAME: "MyOwn",
 };
 
-export const AUTH_SERVICE =
-  process.env.AUTH_SERVICE_URL || "https://admin.carsbuynsell.com/api/auth/.well-known/jwks.json";
+export const AUTH_SERVICE = "https://admin.carsbuynsell.com/api/auth/.well-known/jwks.json";
   
