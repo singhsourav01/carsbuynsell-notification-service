@@ -1,7 +1,7 @@
 import axios from "axios";
 import { UserFCMTokens } from "../types/notification.types";
 
-const USER_SERVICE_URL = process.env.USER_SERVICE_URL || "https://admin.carsbuynsell.com/api/user";
+const USER_SERVICE_URL = "https://admin.carsbuynsell.com/api/user";
 
 /**
  * Get FCM tokens for ALL active users (for broadcast)
