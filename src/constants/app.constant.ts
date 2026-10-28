@@ -11,6 +11,9 @@ export const API_ENDPOINTS = {
 
   // Internal routes (no auth — called by user-service)
   INTERNAL_NEW_LISTING: "/new-listing",
+  INTERNAL_BID_OUTBID: "/bid-outbid",
+  INTERNAL_SUBSCRIPTION_SUCCESS: "/subscription-success",
+  INTERNAL_VEHICLE_SUBMITTED: "/vehicle-submitted",
 
   // Admin routes
   ADMIN_AUCTION_CLOSING_SOON: "/auction-closing-soon",

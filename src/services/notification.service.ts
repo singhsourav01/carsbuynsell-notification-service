@@ -2,10 +2,13 @@ import { NotificationType } from "@prisma/client";
 import NotificationRepository from "../repositories/notification.repository";
 import FCMService from "./fcm.service";
 import TemplateService from "./template.service";
-import { getAllUserFCMTokens } from "../api/user.api";
+import { getAllUserFCMTokens, getUserFCMTokens } from "../api/user.api";
 import {
   NewListingPayload,
   AuctionClosingSoonPayload,
+  BidOutbidPayload,
+  SubscriptionSuccessPayload,
+  VehicleSubmittedPayload,
   CreateNotificationDTO,
   UserFCMTokens,
 } from "../types/notification.types";
@@ -180,6 +183,63 @@ class NotificationService {
 
     console.log(`Auction closing notification: ${pushResult.success} sent, ${pushResult.failure} failed`);
     return pushResult;
+  };
+
+  // ─── Personal notifications (one user) ──────────────────────────────────────
+  // Push only: these types aren't in the NotificationType DB enum, so no
+  // in-app record is stored (that would need a migration).
+
+  private sendToUser = async (
+    user_id: string,
+    template: "BID_OUTBID" | "SUBSCRIPTION_SUCCESS" | "VEHICLE_SUBMITTED",
+    templateData: Record<string, any>,
+    dataPayload: Record<string, string>
+  ) => {
+    const { title, body } = this.templateService.getRenderedTemplate(template, templateData);
+    const tokens = (await getUserFCMTokens(user_id)).filter(
+      token => token && token !== "not-available"
+    );
+    if (tokens.length === 0) {
+      console.log(`${template}: user ${user_id} has no registered device`);
+      return { success: 0, failure: 0, staleTokens: [] as string[] };
+    }
+
+    const pushResult = await this.fcmService.sendToMultipleDevices(tokens, title, body, {
+      ...dataPayload,
+      type: template,
+    });
+    console.log(`${template} notification to ${user_id}: ${pushResult.success} sent, ${pushResult.failure} failed`);
+    return pushResult;
+  };
+
+  // ─── Flow 3: User was outbid → notify that user ─────────────────────────────
+
+  handleBidOutbid = async (payload: BidOutbidPayload) => {
+    const { listing_id, listing_title, outbid_user_id, new_bid_amount, new_bidder_name } = payload;
+    return this.sendToUser(
+      outbid_user_id,
+      "BID_OUTBID",
+      {
+        listing_title,
+        new_bidder_name,
+        new_bid_amount: Number(new_bid_amount).toLocaleString("en-IN"),
+      },
+      { listing_id }
+    );
+  };
+
+  // ─── Flow 4: Subscription activated → notify that user ──────────────────────
+
+  handleSubscriptionSuccess = async (payload: SubscriptionSuccessPayload) => {
+    const { user_id, plan_name, expires_at } = payload;
+    return this.sendToUser(user_id, "SUBSCRIPTION_SUCCESS", { plan_name, expires_at }, {});
+  };
+
+  // ─── Flow 5: User submitted a vehicle to sell → notify that user ────────────
+
+  handleVehicleSubmitted = async (payload: VehicleSubmittedPayload) => {
+    const { user_id, vehicle_title } = payload;
+    return this.sendToUser(user_id, "VEHICLE_SUBMITTED", { vehicle_title }, {});
   };
 }
 
