@@ -2,7 +2,7 @@ import { NotificationType } from "@prisma/client";
 import NotificationRepository from "../repositories/notification.repository";
 import FCMService from "./fcm.service";
 import TemplateService from "./template.service";
-import { getAllUserFCMTokens, getUserFCMTokens } from "../api/user.api";
+import { getAllUserFCMTokens, getUserFCMTokens, removeStaleFCMTokens } from "../api/user.api";
 import {
   NewListingPayload,
   AuctionClosingSoonPayload,
@@ -82,10 +82,7 @@ class NotificationService {
       record.ntf_push_sent_at = pushSent ? new Date() : null;
     });
 
-  if (pushResult.staleTokens.length > 0) {
-    console.log("Remove stale tokens:", pushResult.staleTokens);
-    // call user-service cleanup API here
-  }
+  await removeStaleFCMTokens(pushResult.staleTokens);
 
     // Store in-app notifications
     if (notificationRecords.length > 0) {
@@ -160,10 +157,7 @@ class NotificationService {
         n.ntf_push_sent_at = pushSent ? new Date() : null;
       });
 
-    if (pushResult.staleTokens.length > 0) {
-      console.log("Remove stale tokens:", pushResult.staleTokens);
-      // call user-service cleanup API here
-    }
+    await removeStaleFCMTokens(pushResult.staleTokens);
 
     // Store in-app notifications
     if (notificationRecords.length > 0) {
@@ -209,6 +203,7 @@ class NotificationService {
       type: template,
     });
     console.log(`${template} notification to ${user_id}: ${pushResult.success} sent, ${pushResult.failure} failed`);
+    await removeStaleFCMTokens(pushResult.staleTokens);
     return pushResult;
   };
 

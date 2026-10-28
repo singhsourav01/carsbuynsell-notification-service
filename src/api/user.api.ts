@@ -32,3 +32,17 @@ export const getUserFCMTokens = async (user_id: string): Promise<string[]> => {
     return [];
   }
 };
+
+/**
+ * Remove tokens Firebase reported as stale, so they aren't retried on every send
+ * Calls: POST {USER_SERVICE_URL}/internal/fcm-tokens/remove
+ */
+export const removeStaleFCMTokens = async (tokens: string[]): Promise<void> => {
+  if (tokens.length === 0) return;
+  try {
+    const { data } = await axios.post(`${USER_SERVICE_URL}/internal/fcm-tokens/remove`, { tokens });
+    console.log(`Removed ${data?.data?.removed ?? 0} stale FCM token(s)`);
+  } catch (error: any) {
+    console.error("Failed to remove stale FCM tokens:", error?.message);
+  }
+};
